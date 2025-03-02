@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "418729661940",
+    "project_id": "firesync-3fda4",
+    "storage_bucket": "firesync-3fda4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418729661940:android:7e13d762c336b9546e55a1",
+        "android_client_info": {
+          "package_name": "com.example.firesync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBtwZsZgaj8nbBwtN0scs3bRUyAxuHt20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
