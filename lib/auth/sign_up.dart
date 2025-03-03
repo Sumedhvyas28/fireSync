@@ -1,20 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firesync/auth/sign_up.dart';
+import 'package:firesync/auth/login_screen.dart';
 import 'package:firesync/component/round_button.dart';
 import 'package:firesync/component/text_button.dart';
 import 'package:firesync/component/utils.dart';
 import 'package:firesync/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpPageState extends State<SignUpPage> {
   bool _isPasswordHidden = true;
   bool loading = false;
 
@@ -22,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -31,7 +30,18 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void login() {
+  Future<void> storeUserData(User user) async {
+    final userRef = _firestore.collection('users').doc(user.uid);
+    await userRef.set({
+      'uid': user.uid,
+      'email': user.email,
+      'createdAt': DateTime.now().toIso8601String(),
+      'lastLogin': DateTime.now().toIso8601String(),
+      'role': 'user',
+    });
+  }
+
+  void signUp() {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       utils().toastMessage('Email or Password cannot be empty');
       return;
@@ -39,31 +49,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => loading = true);
 
-
-    Future<void> updateLastLogin(User user) async {
-  final userRef = _firestore.collection('users').doc(user.uid);
-
-  await userRef.update({
-    'lastLogin': DateTime.now().toIso8601String(),
-  }).catchError((error) {
-    print('Error updating last login: $error');
-  });
-}
-
-
-_auth.signInWithEmailAndPassword(
-  email: emailController.text,
-  password: passwordController.text.trim(),
-).then((value) async {
-  await updateLastLogin(value.user!); // ✅ Use this instead
-
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => HomePage()),
-  );
-}).catchError((error) {
-  utils().toastMessage(error.toString());
-}).whenComplete(() => setState(() => loading = false));
+    _auth.createUserWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text.trim(),
+    ).then((value) async {
+      await storeUserData(value.user!);
+      utils().toastMessage('Sign Up Successful!');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }).catchError((error) {
+      utils().toastMessage(error.toString());
+    }).whenComplete(() => setState(() => loading = false));
   }
 
   @override
@@ -82,8 +80,7 @@ _auth.signInWithEmailAndPassword(
                 decoration: const InputDecoration(hintText: 'Enter your Email'),
               ),
             ),
-                        SizedBox(height: 10,),
-
+            SizedBox(height: 10,),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -101,18 +98,20 @@ _auth.signInWithEmailAndPassword(
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RoundButton(title: 'Login', loading: loading, onTap: login),
+              child: RoundButton(title: 'Sign Up', loading: loading, onTap: signUp),
             ),
             const SizedBox(height: 5),
-
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: TextButtons(title: 'Sign/Up', loading: loading, onTap: () =>   Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpPage(),
-                      ),
-                    ),color: Colors.purple,),
+              child: TextButtons(
+                title: 'Already a user? Login',
+                loading: loading,
+                onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                ),
+                color: Colors.purple,
+              ),
             ),
           ],
         ),
