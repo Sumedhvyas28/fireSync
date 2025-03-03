@@ -44,7 +44,7 @@ class DefaultFirebaseOptions {
   static FirebaseOptions web = FirebaseOptions(
     apiKey: dotenv.env['FIREBASE_API_KEY_WEB']!,
     appId: dotenv.env['FIREBASE_APP_ID_WEB']!,
-    messagingSenderId: dotenv.env['FIREBASE_APP_ID_WEB']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
     projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
     authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
   static  FirebaseOptions android = FirebaseOptions(
     apiKey:dotenv.env['FIREBASE_API_KEY_ANDROID']!,
     appId: dotenv.env['FIREBASE_APP_ID_ANDROID']!,
-    messagingSenderId: dotenv.env['FIREBASE_APP_ID_WEB']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
     projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
   );
@@ -62,7 +62,7 @@ class DefaultFirebaseOptions {
   static  FirebaseOptions ios = FirebaseOptions(
     apiKey: dotenv.env['FIREBASE_API_KEY_IOS']!,
     appId: dotenv.env['FIREBASE_APP_ID_IOS']!,
-    messagingSenderId: dotenv.env['FIREBASE_APP_ID_WEB']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
     projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
     iosBundleId: 'com.example.firesync',
@@ -71,7 +71,7 @@ class DefaultFirebaseOptions {
   static FirebaseOptions macos = FirebaseOptions(
     apiKey: dotenv.env['FIREBASE_API_KEY_IOS']!,
     appId: dotenv.env['FIREBASE_APP_ID_IOS']!,
-    messagingSenderId: dotenv.env['FIREBASE_APP_ID_WEB']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
     projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
     iosBundleId: 'com.example.firesync',
@@ -80,7 +80,7 @@ class DefaultFirebaseOptions {
   static  FirebaseOptions windows = FirebaseOptions(
     apiKey: dotenv.env['FIREBASE_API_KEY_WINDOWS']!,
     appId: dotenv.env['FIREBASE_APP_ID_WINDOWS']!,
-    messagingSenderId: dotenv.env['FIREBASE_APP_ID_WEB']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
     projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
     authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,

@@ -1,15 +1,23 @@
-import 'package:firesync/home_page.dart';
+import 'package:firesync/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'firebase_options.dart';
 void main()async {
     WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
+  await dotenv.load(fileName: '.env'); 
 
-  await Firebase.initializeApp(
+  print("Loaded API Key: ${dotenv.env['FIREBASE_API_KEY_ANDROID']}"); // Debugging
+
+if(Firebase.apps.isEmpty){
+    await Firebase.initializeApp(
+        name: 'FireSync',
+
     options: DefaultFirebaseOptions.currentPlatform,
 );
+
+}
+
   runApp(const MyApp());
 }
 
@@ -24,7 +32,7 @@ debugShowCheckedModeBanner: false,
       theme: ThemeData(
            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HomePage(),
+      home: SplashScreen(),
     );
   }
 }
