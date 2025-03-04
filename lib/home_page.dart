@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'more_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,11 +12,43 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final CollectionReference tasks = FirebaseFirestore.instance.collection('tasks');
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() {
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const InitializationSettings initSettings = InitializationSettings(android: androidSettings);
+    flutterLocalNotificationsPlugin.initialize(initSettings);
+  }
+
+  Future<void> _showNotification(String taskTitle) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'task_channel_id', 'Task Notifications',
+      importance: Importance.high,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+
+    const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Task Added',
+      'New task "$taskTitle" added successfully!',
+      platformDetails,
+    );
+  }
 
   // Add a new task
   Future<void> addTask(String title) async {
     if (title.trim().isNotEmpty) {
       await tasks.add({'title': title, 'timestamp': FieldValue.serverTimestamp()});
+      _showNotification(title); // Show notification when task is added
     }
   }
 
@@ -79,11 +112,12 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           "FireSync",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.deepPurple,
             fontWeight: FontWeight.bold,
             fontSize: 26,
           ),
         ),
+     automaticallyImplyLeading: false,    
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.black),

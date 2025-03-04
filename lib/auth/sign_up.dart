@@ -68,52 +68,75 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset('assets/logo.jpg', height: 150),
-            SizedBox(height: 10,),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: emailController,
-                decoration: const InputDecoration(hintText: 'Enter your Email'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // FireSync Title
+              const Text(
+                'FireSync',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                  letterSpacing: 1.5,
+                ),
               ),
-            ),
-            SizedBox(height: 10,),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
+              const SizedBox(height: 20),
+
+              // Email Input
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your Email',
+                  prefixIcon: const Icon(Icons.email),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              // Password Input
+              TextField(
                 controller: passwordController,
                 obscureText: _isPasswordHidden,
                 decoration: InputDecoration(
                   hintText: 'Enter your Password',
+                  prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
                     icon: Icon(_isPasswordHidden ? Icons.visibility_off : Icons.visibility),
                     onPressed: () => setState(() => _isPasswordHidden = !_isPasswordHidden),
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RoundButton(title: 'Sign Up', loading: loading, onTap: signUp),
-            ),
-            const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextButtons(
+              const SizedBox(height: 20),
+
+              // Sign Up Button
+              RoundButton(
+                title: 'Sign Up',
+                loading: loading,
+                onTap: signUp,
+             
+              ),
+              const SizedBox(height: 10),
+
+              // Already a User? Login Button
+              TextButtons(
                 title: 'Already a user? Login',
                 loading: loading,
                 onTap: () => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => LoginScreen()),
                 ),
-                color: Colors.purple,
+                color: Colors.deepPurpleAccent,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

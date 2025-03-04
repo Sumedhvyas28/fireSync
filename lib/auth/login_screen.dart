@@ -39,82 +39,104 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => loading = true);
 
-
     Future<void> updateLastLogin(User user) async {
-  final userRef = _firestore.collection('users').doc(user.uid);
+      final userRef = _firestore.collection('users').doc(user.uid);
 
-  await userRef.update({
-    'lastLogin': DateTime.now().toIso8601String(),
-  }).catchError((error) {
-    print('Error updating last login: $error');
-  });
-}
+      await userRef.update({
+        'lastLogin': DateTime.now().toIso8601String(),
+      }).catchError((error) {
+        print('Error updating last login: $error');
+      });
+    }
 
+    _auth.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text.trim(),
+    ).then((value) async {
+      await updateLastLogin(value.user!);
 
-_auth.signInWithEmailAndPassword(
-  email: emailController.text,
-  password: passwordController.text.trim(),
-).then((value) async {
-  await updateLastLogin(value.user!); // ✅ Use this instead
-
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => HomePage()),
-  );
-}).catchError((error) {
-  utils().toastMessage(error.toString());
-}).whenComplete(() => setState(() => loading = false));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }).catchError((error) {
+      utils().toastMessage(error.toString());
+    }).whenComplete(() => setState(() => loading = false));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset('assets/logo.jpg', height: 150),
-            SizedBox(height: 10,),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: emailController,
-                decoration: const InputDecoration(hintText: 'Enter your Email'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // FireSync Title
+              const Text(
+                'FireSync',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                  letterSpacing: 1.5,
+                ),
               ),
-            ),
-                        SizedBox(height: 10,),
+              const SizedBox(height: 20),
 
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
+              // Email Input
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your Email',
+                  prefixIcon: const Icon(Icons.email),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              // Password Input
+              TextField(
                 controller: passwordController,
                 obscureText: _isPasswordHidden,
                 decoration: InputDecoration(
                   hintText: 'Enter your Password',
+                  prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
                     icon: Icon(_isPasswordHidden ? Icons.visibility_off : Icons.visibility),
                     onPressed: () => setState(() => _isPasswordHidden = !_isPasswordHidden),
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RoundButton(title: 'Login', loading: loading, onTap: login),
-            ),
-            const SizedBox(height: 5),
+              const SizedBox(height: 20),
 
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextButtons(title: 'Sign/Up', loading: loading, onTap: () =>   Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpPage(),
-                      ),
-                    ),color: Colors.purple,),
-            ),
-          ],
+              // Login Button
+              RoundButton(
+                title: 'Login',
+                loading: loading,
+                onTap: login,
+             
+              ),
+              const SizedBox(height: 10),
+
+              // Sign Up Button
+              TextButtons(
+                title: 'Sign Up',
+                loading: loading,
+                onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignUpPage()),
+                ),
+                color: Colors.deepPurpleAccent,
+              ),
+            ],
+          ),
         ),
       ),
     );
